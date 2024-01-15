@@ -23,11 +23,12 @@ public:
 	Sprite* getSprite();
 	
 	static void setSpeed(int speed);
+	static void changeSprite(const char* newSpriteName);
 
 private:
 	cocos2d::Size visibleSize;
 	cocos2d::Vec2 origin;
-	cocos2d::Sprite* colobSprite;
+	static cocos2d::Sprite* colobSprite;
 
 	ActionInterval* left_moving;
 	ActionInterval* right_moving;

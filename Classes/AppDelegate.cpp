@@ -22,8 +22,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "HelloWorldScene.h"
 #include "AppDelegate.h"
-#include "SplashScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 
@@ -82,17 +82,38 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
-    glview->setDesignResolutionSize(640, 960, ResolutionPolicy::NO_BORDER);
+    //glview->setDesignResolutionSize(640, 960, ResolutionPolicy::NO_BORDER);
 
 
 
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
     auto frameSize = glview->getFrameSize();
+    std::vector<std::string> searchPaths;
+
+    if (frameSize.width > mediumResolutionSize.width)
+    {
+        director->setContentScaleFactor(largeResolutionSize.width / designResolutionSize.width);
+        searchPaths.push_back("largeResources");
+    }
+    else if (frameSize.width > smallResolutionSize.width)
+    {
+        director->setContentScaleFactor(mediumResolutionSize.width / designResolutionSize.width);
+        searchPaths.push_back("mediumResources");
+    }
+    else
+    {
+        director->setContentScaleFactor(smallResolutionSize.width / designResolutionSize.width);
+        searchPaths.push_back("smallResources");
+    }
+
+    FileUtils::getInstance()->setSearchPaths(searchPaths);
+
+    /*auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height)
     {        
@@ -107,12 +128,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     else
     {        
         director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
+    } */
 
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = SplashScene::createScene();
+    auto scene = HelloWorldScene::createScene();
 
     // run
     director->runWithScene(scene);

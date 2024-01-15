@@ -1,6 +1,7 @@
-#include "MainMenuScene.h";
-#include "GameScene.h";
-#include "Definitions.h";
+#include "MainMenuScene.h"
+#include "GameScene.h"
+#include "Definitions.h"
+#include "AudioEngine.h"
 
 USING_NS_CC;
 
@@ -42,14 +43,28 @@ bool MainMenuScene::init()
 
     this->addChild(menu, 1);
 
+    id = audio->play2d("background_sound2.mp3", false, 0.1f);
+    audio->setLoop(id, true);
+
     return true;
 }
 
 void MainMenuScene::GoToGameScene(cocos2d::Ref* sender)
 {
-    auto scene = GameScene::createScene();
+    audio->play2d("go_some_scene.mp3");
+    auto scene = GameScene::createScene(UserDefault::getInstance()->getIntegerForKey("myScore"));
     Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
 }
 
+void MainMenuScene::stopMusic()
+{
+    audio->setVolume(id, 0);
+}
 
+void MainMenuScene::startMusic()
+{
+    audio->setVolume(id, 0.1f);
+}
 
+AudioEngine* audio;
+int MainMenuScene::id;

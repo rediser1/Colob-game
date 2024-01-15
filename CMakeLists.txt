@@ -63,7 +63,10 @@ list(APPEND GAME_SOURCE
      Classes/MainMenuScene.cpp
      Classes/Mob.cpp
      Classes/SplashScene.cpp
-
+     Classes/DesignScene.cpp
+     Classes/RandomEvent.cpp
+     Classes/ShopScene.cpp
+     Classes/HelloWorldScene.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
@@ -74,6 +77,10 @@ list(APPEND GAME_HEADER
      Classes/Mob.h
      Classes/SplashScene.h
      Classes/Definitions.h
+     Classes/DesignScene.h
+     Classes/RandomEvent.h
+     Classes/ShopScene.h
+     Classes/HelloWorldScene.h
      )
 
 if(ANDROID)

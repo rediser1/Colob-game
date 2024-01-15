@@ -13,6 +13,7 @@ public:
 	Mob();
     void spawnMob(Layer* layer);
 	void deleteSprite();
+	static void changeSprite(const char* newSpriteName);
 	Mob* operator->();
 	void setTag(int number);
 	int tag;
@@ -24,12 +25,16 @@ public:
 	static int yellow_cost;
 	static int purple_cost;
 	static int green_cost;
+	static int super_cost;
+	static int super_level;
 
 	static void setRedCost(int cost);
 	static void setBlueCost(int cost);
 	static void setYellowCost(int cost);
     static void setGreenCost(int cost);
 	static void setPurpleCost(int cost);
+	static void setSuperCost(int cost);
+	static void setSuperLevel(int level);
 private:
 	Sprite* mobSprite;
 	Vec2 origin;
