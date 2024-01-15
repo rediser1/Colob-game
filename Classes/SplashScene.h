@@ -16,6 +16,7 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(SplashScene);
+
 private:
 
     void GoToMainMenuScene(float dt);

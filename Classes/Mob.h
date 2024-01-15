@@ -18,6 +18,18 @@ public:
 	int tag;
     static int mobs_count;
 
+	int cost;
+	static int red_cost;
+	static int blue_cost;
+	static int yellow_cost;
+	static int purple_cost;
+	static int green_cost;
+
+	static void setRedCost(int cost);
+	static void setBlueCost(int cost);
+	static void setYellowCost(int cost);
+    static void setGreenCost(int cost);
+	static void setPurpleCost(int cost);
 private:
 	Sprite* mobSprite;
 	Vec2 origin;

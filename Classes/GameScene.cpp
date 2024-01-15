@@ -4,6 +4,7 @@
 #include "ui/CocosGUI.h";
 #include "Mob.h";
 #include "Definitions.h";
+#include "ShopScene.h";
 
 USING_NS_CC;
 
@@ -34,6 +35,7 @@ bool GameScene::init()
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    mobsAlive = 0;
 
     //background
     auto bgsprite = Sprite::create("gamebg.png");
@@ -42,12 +44,6 @@ bool GameScene::init()
     this->addChild(bgsprite);
 
     colob = new Colob(this);
-
-    //later....
-
-   // auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
-   //edgeBody->setCollisionBitmask(OBSTACLE_COLLISION_BITMASK);
-    //edgeBody->setContactTestBitmask(true);
    
 
     //button left
@@ -169,13 +165,60 @@ bool GameScene::init()
     down_button->setPosition(Point(visibleSize.width / 3.45 + origin.x, (up_button->getPositionY() -(up_button->getPositionY() - right_button->getPositionY()) * 2)));
     this->addChild(down_button);
     
-    vec.reserve(40);
-    this->schedule(CC_SCHEDULE_SELECTOR(GameScene::SpawnMob), 3);
+    vec.reserve(100);
+    GameScene::SpawnMob(0.1f);
+    GameScene::SpawnMob(0.1f);
+    GameScene::SpawnMob(0.1f);
+    GameScene::SpawnMob(0.1f);
+    GameScene::SpawnMob(0.1f);
 
     auto contactListener = EventListenerPhysicsContact::create();
     contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+    scoreLabel = Label::createWithTTF(std::to_string(score), "fonts/MaldiniNormal-ZVKG3.ttf", 84);
+    scoreLabel->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height * 0.85 + origin.y));
+    scoreLabel->setColor(Color3B(245, 245, 220));
+    this->addChild(scoreLabel, 1000);
+
+    auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
+
+    auto edgeNode = Node::create();
+    edgeNode->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+    edgeNode->setPhysicsBody(edgeBody);
+    this->addChild(edgeNode);
+
+    auto shopButton = MenuItemImage::create("shop.png", "shop_clicked.png", CC_CALLBACK_1(GameScene::startShopScene, this));
+   shopButton->setPosition(Vec2(origin.x + visibleSize.width * 0.9,  origin.y + visibleSize.height / 4));
+   auto shop = Menu::create(shopButton, NULL);
+   shop->setPosition(Point(0, 0));
+
+   this->schedule(CC_SCHEDULE_SELECTOR(GameScene::countCheking));
+    this->addChild(shop);
+}
+
+void GameScene::countCheking(float dt)
+{
+    if (mobsAlive < mobsCount)
+        GameScene::SpawnMob(0);
+}
+
+void GameScene::addMob()
+{
+    mobsCount++;
+}
+
+void GameScene::setScore(unsigned int tempscore)
+{
+    score = tempscore;
+}
+
+void GameScene::startShopScene(cocos2d::Ref* sender)
+{
+    auto scene = ShopScene::createScene(score);
+    vec.clear();
+    Mob::mobs_count = 0;
+    Director::getInstance()->pushScene(scene);
 }
 
 void GameScene::SpawnMob(float dt)
@@ -183,11 +226,13 @@ void GameScene::SpawnMob(float dt)
     Mob mob;
     mob.spawnMob(this);
     vec.push_back(mob);
+    mobsAlive++;
 } 
 
 void GameScene::killMob(int index)
 {
     vec[index].mobs_count -= 1;
+    score += vec.at(index).cost;
     vec.at(index).deleteSprite();
     int vecsize = vec.size();
     if (index != (vecsize - 1))
@@ -200,13 +245,11 @@ void GameScene::killMob(int index)
         vec[index].setTag(index);
     }
     vec.pop_back();
-
+    scoreLabel->setString(std::to_string(score));
+    mobsAlive--;
+    this->scheduleOnce(CC_SCHEDULE_SELECTOR(GameScene::SpawnMob), 0.15f);
 }
 
-void GameScene::killingMobs(float dt)
-{
-    killMob(0);
-}
 
 bool GameScene::onContactBegin(cocos2d::PhysicsContact& contact)
 {
@@ -230,3 +273,6 @@ bool GameScene::onContactBegin(cocos2d::PhysicsContact& contact)
 
     return true;
 }
+
+unsigned int GameScene::score = 0;
+int GameScene::mobsCount = 5;

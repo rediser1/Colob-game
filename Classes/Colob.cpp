@@ -21,30 +21,35 @@ Colob::Colob(cocos2d::Layer *scene)
 	scene->addChild(colobSprite, 10);
 }
 
+void Colob::setSpeed(int speed)
+{
+	m_speed = speed;
+}
+
 void Colob::moveleft(float dt)
 {
-	left_moving = MoveBy::create(dt, Vec2(-333, 0));
+	left_moving = MoveBy::create(dt, Vec2(-m_speed, 0));
 	forever_left_moving = cocos2d::RepeatForever::create(left_moving);
 	colobSprite->runAction(forever_left_moving);
 }
 
 void Colob::moveright(float dt)
 {
-	 right_moving = MoveBy::create(dt, Vec2(333, 0));
+	 right_moving = MoveBy::create(dt, Vec2(m_speed, 0));
 	 forever_right_moving = cocos2d::RepeatForever::create(right_moving);
 	 colobSprite->runAction(forever_right_moving);
 }
 
 void Colob::moveup(float dt)
 {
-	 up_moving = MoveBy::create(dt, Vec2(0, 333));
+	 up_moving = MoveBy::create(dt, Vec2(0, m_speed));
 	 forever_up_moving = cocos2d::RepeatForever::create(up_moving);
 	colobSprite->runAction(forever_up_moving);
 }
 
 void Colob::movedown(float dt)
 {
-	 down_moving = MoveBy::create(dt, Vec2(0, -333));
+	 down_moving = MoveBy::create(dt, Vec2(0, -m_speed));
 	 forever_down_moving = cocos2d::RepeatForever::create(down_moving);
 	colobSprite->runAction(forever_down_moving);
 }
@@ -75,3 +80,5 @@ void Colob::stopmovingdown()
 	colobSprite->stopAction(down_moving);
 	colobSprite->stopAction(forever_down_moving);
 }
+
+int Colob::m_speed = 150;

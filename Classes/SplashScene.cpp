@@ -37,6 +37,7 @@ bool SplashScene::init()
     bgsprite->setScale(visibleSize.width / bgsprite->getContentSize().width, visibleSize.height / bgsprite->getContentSize().height);
     this->addChild(bgsprite);
     return true;
+   
 }
 
 void  SplashScene::GoToMainMenuScene(float dt)

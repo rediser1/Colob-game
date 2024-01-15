@@ -21,6 +21,8 @@ public:
 	void stopmovingdown();
 	
 	Sprite* getSprite();
+	
+	static void setSpeed(int speed);
 
 private:
 	cocos2d::Size visibleSize;
@@ -36,6 +38,8 @@ private:
 	Action* forever_right_moving;
 	Action* forever_down_moving;
 	Action* forever_up_moving;
+
+	static int m_speed;
 };
 
 #endif // __COLOB_H__
